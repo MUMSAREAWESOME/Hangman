@@ -106,38 +106,52 @@ void guess(Player& player, const std::string& word, std::vector<char>& current) 
 }
 
 int main() {
-    Player player;
-    const std::string& word {pickWord()};
-    std::vector<char> current(word.size());
-    for (int i = 0; i < current.size(); i ++) {
-        current[i] = '_';
-    }
     while (true) {
-        std::string currStr;
+        Player player;
+        std::string word {pickWord()};
+        std::vector<char> current(word.size());
         for (int i = 0; i < current.size(); i ++) {
-            currStr += current[i];
+            current[i] = '_';
         }
 
-        if (player.lives == 0) {
-            std::cout << "Lose!\n";
-            break;
+        while (true) {
+            std::string currStr;
+            for (int i = 0; i < current.size(); i ++) {
+                currStr += current[i];
+            }
+
+            if (player.lives == 0) {
+                std::cout << "Lose!\n";
+                break;
+            }
+
+            if (currStr == word) {
+                std::cout << "Win!\n";
+                break;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+
+            std::system("cls");
+
+            std::cout << currStr << '\n' << "Lives: " << player.lives << '\n' << "Letters used: ";
+
+            for (const char& i : player.lettersUsed) {
+                std::cout << i << ' ';
+            }
+
+            std::cout << std::endl;
+
+            guess(player, word, current);
         }
 
-        if (currStr == word) {
-            std::cout << "Win!\n";
-            break;
-        }
-        
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "The word was: " << word << '\n';
 
-        std::system("cls");
-
-        std::cout << currStr << '\n' << "Lives: " << player.lives << '\n';
-
-        guess(player, word, current);
+        std::cout << "Would you like to play again? [Y/n]: ";
+        char choice;
+        std::cin >> choice;
+        choice = std::tolower(choice);
+        if (choice == 'n') break;
     }
-
-    std::cout << "The word was: " << word << '\n';
-
     return 0;
 }
