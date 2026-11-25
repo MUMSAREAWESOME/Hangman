@@ -8,8 +8,36 @@
 #include <string>
 #include <random>
 #include <limits>
+#include <chrono>
 
-std::vector<std::string> words {"cat", "panda", "fish", "dog", "fox", "eagle", "bear", "shark", "cout", "print", "header", "input", "C", "python", "java"};
+std::vector<std::string> words {
+    "despotically", "esperance", "hematin", "compunctions", "subtitled", "chasteners", "stavudines", "tightest", "leviathans", "scanted",
+    "unintentionally", "roupy", "increase", "rechargeable", "codetermination", "upslope", "accredit", "keratotic", "facetiousness", "nonrecombinants",
+    "phylacteries", "maraschino", "liquoring", "improvised", "hoover", "attitudinises", "asymmetrically", "upcurls", "overfavor", "armonicas",
+    "despair", "vigilances", "henequens", "mitigate", "loyalties", "oping", "counterassaults", "cholestatic", "househusband", "mezquit",
+    "upspringing", "national", "wordsmitheries", "derbies", "noviciate", "enfilade", "proceedings", "livery", "fabricated", "overliteral",
+    "blanker", "bobolinks", "unsliced", "eloin", "winds", "complains", "mandrills", "skysurfing", "overelaborated", "highlands",
+    "offstages", "overgovern", "outpopulating", "far", "stetting", "outserve", "grand", "kanzu", "brainchildren", "septicity",
+    "troops", "wispier", "pyrolysis", "cliffs", "postimperial", "metastases", "exilable", "sequencer", "airiness", "efflorescences",
+    "guyed", "price", "diecious", "interstratified", "hyperboloidal", "intertillage", "stolports", "coolies", "kindlinesses", "reinless",
+    "bakers", "shelters", "plop", "bestsellerdoms", "woenesses", "slender", "trotyl", "refloated", "antibioses", "stinkhorns",
+    "fizziest", "eulogiae", "greasing", "vandyked", "berhymed", "anviltop", "juristic", "preheats", "kestrels", "suburban",
+    "impaling", "cataloes", "overbold", "autobahn", "scopulae", "outdrops", "ventails", "preciser", "decolors", "niggling",
+    "telluric", "hempseed", "rewarmed", "capuchin", "drudging", "nonmoney", "reimaged", "hyponyms", "upscales", "shunners",
+    "nitrolic", "splashes", "lovesick", "windbags", "chamfron", "stratify", "vuggiest", "divining", "quirkish", "foreword",
+    "refallen", "evictees", "aplastic", "abuttals", "siameses", "solarism", "gravidae", "plaister", "clanking", "plaiters",
+    "outdrive", "tintings", "trapdoor", "jarosite", "waybills", "windflaw", "windlass", "mouthers", "detracts", "glamours",
+    "apostate", "wessands", "squasher", "dystonia", "ruptured", "claimers", "ecraseur", "nonagons", "bedstead", "quixotes",
+    "hospitia", "sandshoe", "benzoles", "sapphism", "sludgier", "acolytes", "quayages", "wingding", "emitters", "shipyard",
+    "millwork", "quillets", "fourchee", "haywards", "climatic", "lanknesses", "zwiebacks", "remodeling", "inhabitations",
+    "craftswoman", "secretin", "haloperidols", "unselectively", "hoariness", "violinist", "programmability", "dahabiehs",
+    "antihistorical", "pencilled", "ascendencies", "calorimetries", "xerographically", "endamebae", "sapropels", "apparentness",
+    "temporality", "anaerobically", "tatterdemalions", "fenlands", "pinnation", "oilstones", "forlorner", "urbanised",
+    "oesophagi", "ostiaries", "actiniums", "clenchers", "varicosis", "equivoque", "amygdales", "chloritic", "terpineol",
+    "fusionist", "barbicels", "runtiness", "demurring", "fogfruits", "acropetal", "swordlike", "estivator", "lobbyisms",
+    "oxidising", "retinting", "tarriness", "vanaspati", "greegrees", "shellfire", "vibriosis", "tsaritzas", "selenosis",
+    "extricate", "birthwort", "teaseller", "multicell", "barraters", "tamoxifen", "chapteral", "nectarean"
+};
 
 struct Player {
     int lives {10};
@@ -39,6 +67,7 @@ std::string pickWord() {
 }
 
 void guess(Player& player, const std::string& word, std::vector<char>& current) {
+    std::cout << "Enter the letter you want to guess: ";
     char guess;
     while (true){
         try {
@@ -53,14 +82,13 @@ void guess(Player& player, const std::string& word, std::vector<char>& current) 
         break;
     }
     guess = std::tolower(guess);
-    player.guesses ++;
-    bool guessed {inVec(current, guess)};
     std::vector<int> iter;
     for (int i = 0; i < word.size(); i++) {
         if (guess == word[i]) iter.push_back(i);
     }
     if (inVec(player.lettersUsed, guess)) {
         std::cout << "Already guessed this letter!\n";
+        return;
     }
     else if (!iter.empty()) {
         std::cout << "Correct letter!\n";
@@ -71,8 +99,10 @@ void guess(Player& player, const std::string& word, std::vector<char>& current) 
     }
     else {
         std::cout << "Wrong guess!\n";
+        player.lettersUsed.push_back(guess);
         player.lives --;
     }
+    player.guesses ++;
 }
 
 int main() {
@@ -89,7 +119,7 @@ int main() {
         }
 
         if (player.lives == 0) {
-            std::cout << "Loose!\n";
+            std::cout << "Lose!\n";
             break;
         }
 
